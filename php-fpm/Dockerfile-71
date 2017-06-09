@@ -265,6 +265,19 @@ RUN if [ ${INSTALL_LDAP} = true ]; then \
 ;fi
 
 #####################################
+# imagick:
+#####################################
+
+ARG INSTALL_IMAGICK=false
+RUN if [ ${INSTALL_IMAGICK} = true ]; then \
+    apt-get update -yqq && \
+    apt-get install -y gcc make autoconf libc-dev pkg-config && \
+    apt-get install -y libmagickwand-dev && \
+    yes '' | pecl install imagick && \
+    bash -c "echo extension=imagick.so > /usr/local/etc/php/conf.d/imagick.ini" \
+;fi
+
+#####################################
 # SQL SERVER:
 #####################################
 

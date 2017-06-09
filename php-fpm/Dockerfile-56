@@ -61,7 +61,7 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
     # workaround for https://github.com/docker-library/php/issues/133
     #     - Xdebug breaks on access to class static property
     apt-get install -y php5-xdebug && \
-	echo "zend_extension=/usr/lib/php5/20131226/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    echo "zend_extension=/usr/lib/php5/20131226/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 ;fi
 
 # Copy xdebug configration for remote debugging
@@ -244,6 +244,19 @@ RUN if [ ${INSTALL_LDAP} = true ]; then \
     apt-get install -y libldap2-dev && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap \
+;fi
+
+#####################################
+# imagick:
+#####################################
+
+ARG INSTALL_IMAGICK=false
+RUN if [ ${INSTALL_IMAGICK} = true ]; then \
+    apt-get update -yqq && \
+    apt-get install -y gcc make autoconf libc-dev pkg-config && \
+    apt-get install -y libmagickwand-dev && \
+    yes '' | pecl install imagick && \
+    bash -c "echo extension=imagick.so > /usr/local/etc/php/conf.d/imagick.ini" \
 ;fi
 
 #

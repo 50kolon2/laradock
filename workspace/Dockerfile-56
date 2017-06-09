@@ -117,17 +117,17 @@ COPY ./aliases.sh /home/laradock/aliases.sh
 RUN echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
     echo "source /home/laradock/aliases.sh" >> ~/.bashrc && \
-	echo "" >> ~/.bashrc && \
-	sed -i 's/\r//' /home/laradock/aliases.sh && \
-	sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
+    echo "" >> ~/.bashrc && \
+    sed -i 's/\r//' /home/laradock/aliases.sh && \
+    sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
 
 USER root
 RUN echo "" >> ~/.bashrc && \
     echo "# Load Custom Aliases" >> ~/.bashrc && \
     echo "source /home/laradock/aliases.sh" >> ~/.bashrc && \
-	echo "" >> ~/.bashrc && \
-	sed -i 's/\r//' /home/laradock/aliases.sh && \
-	sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
+    echo "" >> ~/.bashrc && \
+    sed -i 's/\r//' /home/laradock/aliases.sh && \
+    sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
 
 #####################################
 # xDebug:
@@ -351,6 +351,22 @@ RUN if [ ${INSTALL_LARAVEL_INSTALLER} = true ]; then \
     echo "" >> ~/.bashrc && \
     echo 'export PATH="~/.composer/vendor/bin:$PATH"' >> ~/.bashrc \
     && composer global require "laravel/installer" \
+;fi
+
+USER laradock
+
+#####################################
+# imagick:
+#####################################
+USER root
+
+ARG INSTALL_IMAGICK=false
+RUN if [ ${INSTALL_IMAGICK} = true ]; then \
+    apt-get update -yqq && \
+    apt-get install -y gcc make autoconf libc-dev pkg-config && \
+    apt-get install -y libmagickwand-dev && \
+    yes '' | pecl install imagick && \
+    bash -c "echo extension=imagick.so > /etc/php/5.6/cli/conf.d//imagick.ini" \
 ;fi
 
 USER laradock
